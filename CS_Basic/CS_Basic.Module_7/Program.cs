@@ -127,332 +127,144 @@
             }
         }
         private void PrintOrder()
-
         {
-
             Console.WriteLine(Name + " " + Lastname + " заказал:");
-
             for (int i = 0; i < product_list.Length; i++)
-
                 if (product_list[i] != null)
-
                     Console.WriteLine(product_list[i].Product_name);
-
         }
-
-
-
         /// <summary>
-
         /// Заказать доставку
-
         /// </summary>
-
         public void CreateOrder<TDelivery>(string addrees, DelivType delivType) where TDelivery : Delivery
-
         {
-
             Order<TDelivery> order;
-
             switch (delivType)
-
             {
-
                 case DelivType.Shop:
-
                     order = new Order<TDelivery>(new ShopDelivery() as TDelivery);
-
                     break;
-
                 case DelivType.PickPoint:
-
                     order = new Order<TDelivery>(new PickPointDelivery() as TDelivery);
-
                     break;
-
                 case DelivType.Home:
-
                     order = new Order<TDelivery>(new HomeDelivery() as TDelivery);
-
                     break;
-
                 default:
-
                     Console.WriteLine("Не выбрана корректная доставка");
-
                     return;
-
                     break;
-
             }
 
             order.Products = this.product_list;
-
             order.Address = addrees;
-
             PrintOrder();
-
             Console.WriteLine("Создан заказ с доставкой на адрес " + addrees);
-
-
-
             order.SendToDelivery();
-
         }
-
     }
-
-
-
     class HomeDelivery : Delivery
-
     {
-
         internal override void Send(string address)
-
         {
-
             Console.WriteLine("Выполняю доставку на дом по адресу: \r\n" + address);
-
         }
-
     }
-
-
-
     class PickPointDelivery : Delivery
-
     {
-
         internal override void Send(string address)
-
         {
-
             Console.WriteLine("Выполняю доставку PickPoint по адресу: \r\n" + address);
-
         }
-
     }
-
-
-
     class ShopDelivery : Delivery
-
     {
-
         Courier courier { get; set; }
-
-
-
         internal override void Send(string address)
-
         {
-
             Console.WriteLine("Выполняю доставку в магазин по адресу: \r\n" + address);
-
         }
-
     }
-
-
-
     class Product
-
     {
-
         public string Product_name;
-
         string Product_description;
-
         /// <summary>
-
         /// Идентификатор товара
-
         /// </summary>
-
         string Product_ID;
-
         public Product(string product_name)
-
         { Product_name = product_name; }
-
     }
-
-
-
     class Order<TDelivery/*,TStruct*/> where TDelivery : Delivery
-
     {
-
         private TDelivery _delivery;
-
-
-
-
-
         // Агрегация
-
         public Order(TDelivery delivery)
-
         {
-
             _delivery = delivery;
-
         }
-
-
-
         // композиция
-
         //private HomeDelivery _homeDelivery;
-
         //public Order()
-
         //{
-
         //    _homeDelivery = new HomeDelivery();
-
         //}
-
-
-
         public int Number;
-
-
-
         public string Address;
-
-
-
         public string Description;
-
-
-
         public Product[] Products;
-
-
-
         public void SendToDelivery()
-
         {
-
             _delivery.Send(Address);
-
         }
-
-
-
         public void DisplayAddress()
-
         {
-
             Console.WriteLine(_delivery.Address);
-
         }
-
-
-
     }
-
     internal class Program
-
     {
-
         static void Main(string[] args)
-
         {
-
             Staff Freelancer = new Staff("Bob", "Marley");
-
             Console.WriteLine(Freelancer.Name + " " + Freelancer.LastName + " nick is " + Freelancer.Nick() + Environment.NewLine);
-
-
-
             Courier JustMerried = new Courier("Jane", "Douglas");
-
             Console.WriteLine("Modemoiselle {0} {1}", JustMerried.Name, JustMerried.LastName);
-
             JustMerried = JustMerried + "Kirkland";
-
             Console.WriteLine("Madam {0} {1} \r\n", JustMerried.Name, JustMerried.LastName);
-
-
-
             Company Fedex = new Company("Fedex");
-
             Fedex.EnrollEmployee(new Staff("Jimmy", "Brown"));
-
             Fedex.EnrollEmployee(new Courier("Sami", "Naseri"));
-
             Fedex.EnrollEmployee(new Courier("Neal", "Oliver"));
-
-
-
             Company Shop = new Company("FoodCourt");
-
             Shop.EnrollEmployee(new Staff("Frank", "Brook"));
-
             Shop.EnrollEmployee(new Staff("James", "Bond"));
-
             Shop.EnrollEmployee(new Courier("O.J.", "Grant"));
 
-
-
-
-
             Buyer Jane = new Buyer("Patric", "Jane");
-
             //Jane.phones[] = Jane.phones[2];
-
             Jane.Home_Address = "CBI Sacramento";
-
             Jane.AddToCart(new Product("Сыр"));
-
             Jane.AddToCart(new Product("Чай"));
-
             Jane.AddToCart(new Product("Сэндвич"));
-
             Jane.CreateOrder<HomeDelivery>(Jane.Home_Address, Buyer.DelivType.Home);
 
-
-
             Buyer Teresa = new Buyer("Teresa", "Lisbon");
-
             Teresa.Home_Address = "CBI Sacramento";
-
             Teresa.AddToCart(new Product("Салат"));
-
             Teresa.AddToCart(new Product("Кофе"));
-
             Teresa.AddToCart(new Product("Чизкейк"));
-
             Teresa.CreateOrder<ShopDelivery>("Chic av. 2", Buyer.DelivType.Shop);
 
-
-
             Buyer Cho = new Buyer("Cho");
-
             Cho.Home_Address = "CBI Sacramento";
-
             Cho.AddToCart(new Product("Кола"));
-
             Cho.AddToCart(new Product("Гамбургер"));
-
             Cho.CreateOrder<PickPointDelivery>("5th av. 55", Buyer.DelivType.PickPoint);
 
-
-
             Company FakeCompany = new Company("");
-
-
-
             Console.ReadKey();
-
-
-
         }
-
-
-
     }
 }
