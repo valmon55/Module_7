@@ -204,6 +204,7 @@
         {
             _delivery = delivery;
         }
+
         // композиция
         //private HomeDelivery _homeDelivery;
         //public Order()
